@@ -1,144 +1,219 @@
-**# WorkforcePulse — Employee Attrition Analytics \& Prediction**
+# WorkforcePulse — Employee Attrition Analytics & Prediction
+
+WorkforcePulse is a Data Analytics and Machine Learning project that analyzes employee attrition patterns and builds predictive models to identify factors associated with employee turnover.
 
+## Problem Statement
+
+Employee attrition can affect productivity, hiring costs, team stability, and organizational performance.
 
+This project uses the IBM HR Analytics Employee Attrition & Performance dataset to:
 
-**WorkforcePulse is a Data Analytics and Machine Learning project that analyzes employee attrition patterns and builds predictive models to identify employees who may be at higher risk of leaving an organization.**
+* Analyze employee demographics and workplace characteristics
+* Identify patterns associated with employee attrition
+* Explore relationships between overtime, job satisfaction, income, tenure, and attrition
+* Engineer additional features related to employee tenure and overtime
+* Build machine learning models for attrition prediction
+* Evaluate models using multiple classification metrics
 
+## Dataset
 
+* **Records:** 1,470 employees
+* **Original features:** 35
+* **Target:** `Attrition`
+* **Target classes:**
 
-**## Problem Statement**
+  * `0` = No Attrition
+  * `1` = Attrition
+* **Source:** IBM HR Analytics Employee Attrition & Performance dataset
 
+Dataset source: Kaggle — IBM HR Analytics Employee Attrition & Performance
 
+The original raw dataset is preserved unchanged in the `data/raw/` directory.
 
-**Employee attrition can affect productivity, hiring costs, team stability, and organizational performance.**
+## Technologies Used
 
+* Python
+* Pandas
+* NumPy
+* Matplotlib
+* Seaborn
+* Scikit-learn
+* Jupyter Notebook
+* Joblib
 
+## Project Workflow
 
-**This project uses the IBM HR Analytics Employee Attrition dataset to:**
+```text
+Raw Dataset
+    ↓
+Data Quality Analysis
+    ↓
+Data Cleaning
+    ↓
+Exploratory Data Analysis
+    ↓
+Feature Engineering
+    ↓
+Data Preprocessing
+    ↓
+Machine Learning
+    ↓
+Model Evaluation
+    ↓
+Insights & Conclusion
+```
+
+## Data Cleaning
+
+The preprocessing stage includes:
+
+* Checking missing values and duplicate records
+* Removing identifier and constant columns
+* Converting the `Attrition` target into binary values
+* Cleaning categorical values
+* Preparing numerical and categorical variables for machine learning
+
+## Exploratory Data Analysis
+
+The project explores:
+
+* Employee attrition distribution
+* Age distribution
+* Monthly income
+* Years at company
+* Overtime and attrition
+* Job role and attrition
+* Job satisfaction and attrition
+* Department and attrition
+
+## Feature Engineering
+
+Additional features were created to support analysis and prediction:
+
+* `OverTime_Flag`
+* `Gender_Flag`
+* `PromotionGap`
+* `RoleTenureRatio`
+* `ManagerTenureRatio`
+* `IncomePerWorkingYear`
+
+## Machine Learning Models
+
+Three classification models were trained:
+
+1. Logistic Regression
+2. Random Forest
+3. Gradient Boosting
 
+The dataset was split into training and testing sets using an 80:20 stratified split.
 
+Categorical variables were one-hot encoded, while numerical variables were imputed and standardized through a preprocessing pipeline.
 
-**- Analyze employee demographics and workplace characteristics**
+## Model Results
 
-**- Identify patterns associated with employee attrition**
+| Model               | Accuracy | Precision | Recall | F1 Score | ROC-AUC |
+| ------------------- | -------: | --------: | -----: | -------: | ------: |
+| Logistic Regression |   0.7687 |    0.3765 | 0.6809 |   0.4848 |  0.8145 |
+| Random Forest       |   0.8265 |    0.4412 | 0.3191 |   0.3704 |  0.7707 |
+| Gradient Boosting   |   0.8469 |    0.5714 | 0.1702 |   0.2623 |  0.8082 |
 
-**- Explore relationships between overtime, job satisfaction, income, tenure, and attrition**
+The models show different performance characteristics across accuracy, precision, recall, F1 score, and ROC-AUC. Logistic Regression achieved the highest recall and F1 score among the evaluated models, while Gradient Boosting achieved the highest accuracy and precision.
 
-**- Build machine learning models for attrition prediction**
+## Key Analytical Findings
 
-**- Evaluate models using metrics suitable for an imbalanced classification problem**
+The exploratory analysis examines the association of factors such as:
 
+* Overtime
+* Job role
+* Job satisfaction
+* Income
+* Employee tenure
+* Work-life balance
 
+with employee attrition in the dataset.
 
-**## Dataset**
+These findings represent patterns in the provided dataset and should not be interpreted as proof of causal relationships.
 
+## Project Structure
 
+```text
+WorkforcePulse/
+│
+├── data/
+│   ├── raw/
+│   ├── interim/
+│   └── processed/
+│
+├── models/
+│
+├── notebooks/
+│   └── ChayanshiJain_WorkforcePulse.ipynb
+│
+├── outputs/
+│   └── model/
+│
+├── reports/
+│
+├── src/
+│   ├── data_cleaning.py
+│   ├── eda_analysis.py
+│   ├── features.py
+│   ├── generate_eda_plots.py
+│   ├── model_evaluation.py
+│   └── train_model.py
+│
+├── tests/
+│
+├── README.md
+└── requirements.txt
+```
 
-**- Records: 1,470 employees**
+## How to Run
 
-**- Original features: 35**
+### 1. Clone the repository
 
-**- Target: `Attrition`**
+```bash
+git clone https://github.com/chayanshijain23/WorkforcePulse.git
+cd WorkforcePulse
+```
 
-**- Target classes:**
+### 2. Install dependencies
 
-&#x20; **- `0` = No Attrition**
+```bash
+pip install -r requirements.txt
+```
 
-&#x20; **- `1` = Attrition**
+### 3. Launch Jupyter Notebook
 
+```bash
+jupyter notebook
+```
 
+Open:
 
-**The original raw dataset is preserved unchanged.**
+```text
+notebooks/ChayanshiJain_WorkforcePulse.ipynb
+```
 
+## Limitations
 
+* The dataset contains 1,470 records and is synthetic in nature.
+* The attrition class is smaller than the non-attrition class, creating class imbalance.
+* The dataset represents a fixed set of employee records and may not generalize to real organizations.
+* Model predictions should not be used as the sole basis for real-world employee or HR decisions.
 
-**## Project Workflow**
+## Conclusion
 
+WorkforcePulse demonstrates an end-to-end data analytics and machine learning workflow for employee attrition analysis, covering data cleaning, exploratory analysis, feature engineering, preprocessing, model training, and evaluation.
 
+The project is intended for academic and analytical purposes and demonstrates how machine learning techniques can be applied to study patterns associated with employee attrition.
 
-**```text**
+## Author
 
-**Raw Dataset**
+**Chayanshi Jain**
+B.Tech — Computer Science & Engineering (Data Science)
+ABES Engineering College, Ghaziabad
 
-&#x20;    **↓**
+## GitHub Repository
 
-**Data Quality Analysis**
-
-&#x20;    **↓**
-
-**Data Cleaning**
-
-&#x20;    **↓**
-
-**Exploratory Data Analysis**
-
-&#x20;    **↓**
-
-**Feature Preprocessing**
-
-&#x20;    **↓**
-
-**Machine Learning**
-
-&#x20;    **↓**
-
-**Model Evaluation**
-
-&#x20;    **↓**
-
-**Business Insights**
-
-
-
-**# Python**
-
-**\_\_pycache\_\_/**
-
-**\*.pyc**
-
-
-
-**# Virtual environments**
-
-**venv/**
-
-**.venv/**
-
-
-
-**# Jupyter**
-
-**.ipynb\_checkpoints/**
-
-
-
-**# Raw dataset**
-
-**data/raw/**
-
-
-
-**# Generated processed data**
-
-**data/processed\_employee\_attrition.csv**
-
-
-
-**# Trained models**
-
-**models/\*.pkl**
-
-
-
-**# Generated outputs**
-
-**outputs/**
-
-
-
-**# OS files**
-
-**.DS\_Store**
-
-**Thumbs.db**
-
+https://github.com/chayanshijain23/WorkforcePulse
