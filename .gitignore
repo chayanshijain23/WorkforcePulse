@@ -7,3 +7,4 @@ models/*.pkl
 outputs/
 .DS_Store
 Thumbs.db
+data/final_employee_attrition.csv
