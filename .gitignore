@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+data/raw/
+data/processed_employee_attrition.csv
+models/*.pkl
+outputs/
+.DS_Store
+Thumbs.db

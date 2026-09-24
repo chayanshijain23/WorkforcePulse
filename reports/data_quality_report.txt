@@ -1,0 +1,33 @@
+
+WORKFORCEPULSE - DATA QUALITY REPORT
+====================================
+
+Rows before cleaning: 1470
+Columns before cleaning: 35
+
+Rows after cleaning: 1470
+Columns after cleaning: 31
+
+Missing values: 0
+Duplicate rows: 0
+
+Constant columns detected:
+['EmployeeCount', 'Over18', 'StandardHours']
+
+Columns removed:
+['EmployeeNumber', 'EmployeeCount', 'Over18', 'StandardHours']
+
+Target column:
+Attrition
+
+Target encoding:
+Yes -> 1
+No  -> 0
+
+Attrition = No:
+1233 (83.88%)
+
+Attrition = Yes:
+237 (16.12%)
+
+Raw dataset was NOT modified.
