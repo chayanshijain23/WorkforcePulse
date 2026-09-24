@@ -1,16 +1,26 @@
 import pandas as pd
 import joblib
-import matplotlib.pyplot as plt
 from pathlib import Path
 
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.inspection import permutation_importance
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
 
 
-DATA_PATH = Path("data/processed_employee_attrition.csv")
+# =========================
+# PATHS
+# =========================
+
+DATA_PATH = Path("data/final_employee_attrition.csv")
 MODEL_PATH = Path("models/logistic_regression.pkl")
+
 OUTPUT_DIR = Path("outputs/model")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+
+# =========================
+# LOAD DATA + MODEL
+# =========================
 
 df = pd.read_csv(DATA_PATH)
 
@@ -19,54 +29,109 @@ y = df["Attrition"]
 
 model = joblib.load(MODEL_PATH)
 
-# Predictions
+
+# =========================
+# PREDICTIONS
+# =========================
+
 predictions = model.predict(X)
 
-# Confusion Matrix
+
+# =========================
+# CONFUSION MATRIX
+# =========================
+
 cm = confusion_matrix(y, predictions)
 
-disp = ConfusionMatrixDisplay(
-    confusion_matrix=cm,
-    display_labels=["No Attrition", "Attrition"]
+plt.figure(figsize=(6, 5))
+
+plt.imshow(cm)
+
+plt.title("Confusion Matrix - Logistic Regression")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+
+plt.xticks(
+    [0, 1],
+    ["No Attrition", "Attrition"]
 )
 
-disp.plot()
-plt.title("Confusion Matrix - Logistic Regression")
+plt.yticks(
+    [0, 1],
+    ["No Attrition", "Attrition"]
+)
+
+for i in range(2):
+    for j in range(2):
+        plt.text(
+            j,
+            i,
+            cm[i, j],
+            ha="center",
+            va="center"
+        )
+
 plt.tight_layout()
+
 plt.savefig(
     OUTPUT_DIR / "confusion_matrix_logistic_regression.png"
 )
+
 plt.close()
 
-# Permutation Feature Importance
+
+# =========================
+# PERMUTATION IMPORTANCE
+# =========================
+
 importance = permutation_importance(
     model,
     X,
     y,
-    n_repeats=10,
+    n_repeats=5,
     random_state=42,
     scoring="f1"
 )
 
-feature_importance = pd.DataFrame({
+importance_df = pd.DataFrame({
     "Feature": X.columns,
     "Importance": importance.importances_mean
 })
 
-feature_importance = feature_importance.sort_values(
+importance_df = importance_df.sort_values(
     "Importance",
     ascending=False
 )
 
-feature_importance.to_csv(
+importance_df.to_csv(
     OUTPUT_DIR / "feature_importance.csv",
     index=False
 )
 
-print("\nTop 15 features:")
-print(feature_importance.head(15).to_string(index=False))
 
-print("\nConfusion matrix:")
+# =========================
+# OUTPUT
+# =========================
+
+print("=" * 50)
+print("MODEL EVALUATION COMPLETED!")
+print("=" * 50)
+
+print("\nConfusion Matrix:")
 print(cm)
 
-print("\nEvaluation completed successfully!")
+print("\nTop 10 Important Features:")
+
+print(
+    importance_df.head(10).to_string(index=False)
+)
+
+print(
+    "\nSaved confusion matrix to:",
+    OUTPUT_DIR / "confusion_matrix_logistic_regression.png"
+)
+
+print(
+    "Saved feature importance to:",
+    OUTPUT_DIR / "feature_importance.csv"
+)

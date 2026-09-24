@@ -7,8 +7,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
+
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -23,9 +25,12 @@ from sklearn.metrics import (
 # PATHS
 # =========================
 
-DATA_PATH = Path("data/processed_employee_attrition.csv")
+DATA_PATH = Path("data/final_employee_attrition.csv")
 MODEL_DIR = Path("models")
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+REPORT_DIR = Path("reports")
+REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # =========================
@@ -92,6 +97,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 # =========================
 
 models = {
+
     "Logistic Regression": LogisticRegression(
         max_iter=2000,
         class_weight="balanced",
@@ -103,6 +109,13 @@ models = {
         class_weight="balanced",
         random_state=42,
         n_jobs=-1
+    ),
+
+    "Gradient Boosting": GradientBoostingClassifier(
+        n_estimators=150,
+        learning_rate=0.05,
+        max_depth=3,
+        random_state=42
     )
 }
 
@@ -127,10 +140,25 @@ for model_name, model in models.items():
     probabilities = pipeline.predict_proba(X_test)[:, 1]
 
     accuracy = accuracy_score(y_test, predictions)
-    precision = precision_score(y_test, predictions, zero_division=0)
-    recall = recall_score(y_test, predictions, zero_division=0)
-    f1 = f1_score(y_test, predictions, zero_division=0)
-    roc_auc = roc_auc_score(y_test, probabilities)
+    precision = precision_score(
+        y_test,
+        predictions,
+        zero_division=0
+    )
+    recall = recall_score(
+        y_test,
+        predictions,
+        zero_division=0
+    )
+    f1 = f1_score(
+        y_test,
+        predictions,
+        zero_division=0
+    )
+    roc_auc = roc_auc_score(
+        y_test,
+        probabilities
+    )
 
     results.append({
         "Model": model_name,
@@ -152,14 +180,25 @@ for model_name, model in models.items():
     print(f"ROC-AUC  : {roc_auc:.4f}")
 
     print("\nClassification Report:")
-    print(classification_report(
-        y_test,
-        predictions,
-        target_names=["No Attrition", "Attrition"]
-    ))
 
-    # Save model
-    filename = model_name.lower().replace(" ", "_") + ".pkl"
+    print(
+        classification_report(
+            y_test,
+            predictions,
+            target_names=[
+                "No Attrition",
+                "Attrition"
+            ]
+        )
+    )
+
+    # Save trained model
+    filename = (
+        model_name.lower()
+        .replace(" ", "_")
+        + ".pkl"
+    )
+
     joblib.dump(
         pipeline,
         MODEL_DIR / filename
@@ -173,9 +212,14 @@ for model_name, model in models.items():
 results_df = pd.DataFrame(results)
 
 results_df.to_csv(
-    "reports/model_results.csv",
+    REPORT_DIR / "model_results.csv",
     index=False
 )
+
+
+# =========================
+# FINAL OUTPUT
+# =========================
 
 print("\n" + "=" * 50)
 print("MODEL TRAINING COMPLETED!")
